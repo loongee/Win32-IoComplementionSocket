@@ -184,7 +184,12 @@ void SockIoServer::SocketProcessLoopInner()
     DWORD nTransfered = 0;
     LPOVERLAPPED pOverlapped = NULL;
     ULONG_PTR compKey;
-    auto status = GetQueuedCompletionStatus(hCompPort, &nTransfered, &compKey, &pOverlapped, INFINITE);
+    if (!GetQueuedCompletionStatus(hCompPort, &nTransfered, &compKey, &pOverlapped, INFINITE)) {
+      if (ERROR_OPERATION_ABORTED != WSAGetLastError()) {
+        printf("GetQueuedCompletionStatus fail:%d\n", WSAGetLastError());
+      }
+      break;
+    }
 
     if (compKey == kExitKey) {
       continue;

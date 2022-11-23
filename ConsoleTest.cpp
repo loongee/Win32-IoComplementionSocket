@@ -17,9 +17,7 @@ int main()
 {
   SockIoServer server;
   server.Start(27015);
-  while (true) {
-    Sleep(1000);
-  }
+  getchar();
   return 0;
 }
 
